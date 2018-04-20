@@ -1,0 +1,20 @@
+.notification {
+	top: 20%;
+	right: 8%;
+	padding: 20px;
+	width: 250px;
+	-webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.success {
+	background-color: #19A974;
+}
+
+.error {
+	background-color: #FF4136;
+}
