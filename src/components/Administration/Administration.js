@@ -63,8 +63,8 @@ class Administration extends React.Component {
 
   	this.setNotification();
 
-  	// if holiday from or holiday to date input valus is empty,
-  	// show error notification return
+  	// if holiday from or holiday to date input value is empty,
+  	// show error notification and return
   	if (!holidayFrom || !holidayTo) {
   		this.setNotification(true, 'Zadajte dátumy od a do pre dovolenku!', 'error');
   		return;
@@ -184,8 +184,9 @@ class Administration extends React.Component {
 					onClick={this.onSubmit}>
 					Uložiť zmeny
 				</button>
+
 				<h2 className="f3-l f4">Stabilné otváracie hodiny</h2>
-				<div className="mw-50 dib">
+				<div className="w-25-l w-third-m w-100 dib mb1">
 					<label htmlFor="stableFrom">Od: </label>
 					<input
 						type="time"
@@ -195,7 +196,7 @@ class Administration extends React.Component {
 						onChange={this.handleInputChange}
 					/>
 				</div>
-				<div className="mw-50 dib pl2">
+				<div className="w-25-l w-third-m w-100 dib">
 					<label htmlFor="stableTo">Do: </label>
 					<input
 						type="time"
@@ -206,7 +207,7 @@ class Administration extends React.Component {
 					/>
 				</div>
 				<p>Obedová prestávka</p>
-				<div className="mw-50 dib">
+				<div className="w-25-l w-third-m w-100 dib mb1">
 					<label htmlFor="lunchFrom">Od: </label>
 					<input
 						type="time"
@@ -216,7 +217,7 @@ class Administration extends React.Component {
 						onChange={this.handleInputChange}
 					/>
 				</div>
-				<div className="mw-50 dib pl2">
+				<div className="w-25-l w-third-m w-100 dib">
 					<label htmlFor="lunchTo">Do: </label>
 					<input
 						type="time"
@@ -230,6 +231,7 @@ class Administration extends React.Component {
 				<h2 className="f3-l f4">Zatvorené</h2>
 				<select
 					multiple="multiple"
+					className="w-25-l w-third-m w-100"
 					size={days.length}
 					defaultValue={closed}
 					onChange={this.saveClosedDays}
@@ -240,7 +242,7 @@ class Administration extends React.Component {
 				<h2 className="f3-l f4">Dovolenka</h2>
 				<p>Pridať dovolenku</p>
 
-				<div className="w-30-l w-50-m w-100 dib">
+				<div className="w-30-l w-50-m w-100 dib mb1">
 					<label htmlFor="holidayFrom">Od (vrátane): </label>
 					<input
 						type="date"
@@ -250,7 +252,7 @@ class Administration extends React.Component {
 						onChange={this.handleInputChange}
 					/>
 				</div>
-				<div className="w-30-l w-50-m w-100 dib">
+				<div className="w-30-l w-50-m w-100 dib mb1">
 					<label htmlFor="holidayTo">Do (vrátane): </label>
 					<input
 						type="date"
@@ -260,7 +262,7 @@ class Administration extends React.Component {
 						onChange={this.handleInputChange}
 					/>
 				</div>
-				<div className="w-30-l w-50-m w-100 dib">
+				<div className="w-30-l w-50-m w-100 dib mb1">
 					<input
 						type="text"
 						placeholder="Poznámka"
