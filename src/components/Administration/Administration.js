@@ -38,6 +38,7 @@ class Administration extends React.Component {
 		this.setState({
 			[name]: value
 		});
+		this.props.setUnsavedChanges(true);
 	}
 
 	// save to state the days in week when it's closed
@@ -52,6 +53,7 @@ class Administration extends React.Component {
     }
 
     this.setState({closed: closedDays});
+    this.props.setUnsavedChanges(true);
   }
 
   // add range of days to "holiday"
@@ -92,6 +94,7 @@ class Administration extends React.Component {
 	  // concat local holiday array to state holiday array
 	  // and show success notification
 	  this.setState({holidays: this.state.holidays.concat(holidaysAdd)});
+	  this.props.setUnsavedChanges(true);
 	  this.setNotification(true, 'Dovolenka pridaná', 'success');
   }
 
@@ -121,6 +124,7 @@ class Administration extends React.Component {
   				break;
   			}
   		}
+  		this.props.setUnsavedChanges(true);
   	}
   }
 
@@ -153,6 +157,7 @@ class Administration extends React.Component {
 	  	};
 
 	  	this.props.setOpeningHours(openingHours);
+	  	this.props.setUnsavedChanges(false);
 	  	this.setNotification(true, 'Zmeny uložené', 'success');
 	  } else {
 	  	this.setNotification(true, 'Chyba v stabilných otváracích hodinách!', 'error');
@@ -164,7 +169,7 @@ class Administration extends React.Component {
 		const days = ['Pondelok', 'Utorok', 'Streda', 'Štvrtok', 'Piatok', 'Sobota', 'Nedeľa'];
 		const { stableFrom, stableTo, lunchFrom, lunchTo, closed, holidays, holidayFrom, holidayTo, holidayNote, notification } = this.state;
 
-		// sort holidays ascending
+		// sort holidays ascending by date
 		holidays.sort((a, b) => {
 			return a.date - b.date;
 		});
