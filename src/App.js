@@ -10,8 +10,8 @@ class App extends Component {
     super();
     this.state = {
       isSignedIn: false,
-      unsavedChanges: false,
-      today: new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())),
+      unsavedChanges: false, 
+      today: `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`,
       openingHours: {
         stableFrom: '09:00',
         stableTo: '17:00',
@@ -66,6 +66,16 @@ class App extends Component {
     }
   }
 
+  // change "today" day -7 or +7 days
+  // used in SelectDate component
+  changeDate = (change) => {
+    let today = new Date(this.state.today);
+    
+    today.setDate(today.getDate() + change);
+    today = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+    this.setState({today});
+  }
+
   // handles state of "unsaved changes"
   // used in Administration component
   setUnsavedChanges = (unsavedChanges) => {
@@ -96,7 +106,11 @@ class App extends Component {
             />
           :
             <div>
-              <SelectDate today={today} setDate={this.setDate} />
+              <SelectDate
+                today={today}
+                setDate={this.setDate}
+                changeDate={this.changeDate}
+              />
               <OpeningHours
                 today={today}
                 hours={openingHours}
