@@ -20,16 +20,19 @@ class App extends Component {
         closed: [5, 6],
         holidays: [
           {
-            date: new Date("2018-05-01"),
+            dateFrom: new Date("2018-05-01"),
+            dateTo: new Date("2018-05-01"),
             description: "Sviatok práce"
           },
           {
-            date: new Date("2018-05-08"),
+            dateFrom: new Date("2018-05-08"),
+            dateTo: new Date("2018-05-08"),
             description: "Deň víťazstva nad fašizmom"
           },
           {
-            date: new Date("2018-04-19"),
-            description: ""
+            dateFrom: new Date("2018-04-23"),
+            dateTo: new Date("2018-04-27"),
+            description: "dovolenka"
           }
         ]
       }

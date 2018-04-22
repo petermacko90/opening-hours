@@ -23,8 +23,9 @@ class OpeningHours extends React.Component {
   // if true, return corresponding holiday object
   isDateInHolidays = (d) => {
     for (let i = 0, l = this.props.hours.holidays.length; i < l; i++) {
-      if (this.props.hours.holidays[i].date.getTime() === d.getTime()) {
-        return this.props.hours.holidays[i];
+      if (this.props.hours.holidays[i].dateFrom.getTime() <= d.getTime()
+          && this.props.hours.holidays[i].dateTo.getTime() >= d.getTime()) {
+            return this.props.hours.holidays[i];
       }
     }
     return false;

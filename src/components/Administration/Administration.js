@@ -56,12 +56,12 @@ class Administration extends React.Component {
     this.props.setUnsavedChanges(true);
   }
 
-  // add range of days to "holiday"
+  // add range of days and note to "holiday"
   addHoliday = () => {
   	const { holidayFrom, holidayTo, holidayNote } = this.state;
-  	let d = new Date(holidayFrom);
-  	const toDate = new Date(holidayTo);
-  	let holidaysAdd = [];
+  	const dateFrom = new Date(holidayFrom);
+  	const dateTo = new Date(holidayTo);
+  	let holidays = this.state.holidays.slice();
 
   	this.setNotification();
 
@@ -79,45 +79,47 @@ class Administration extends React.Component {
   		return;
   	}
 
-		// go through inputted day range
-  	for (; d <= toDate; d.setDate(d.getDate() + 1)) {
-  		if (this.isDateInHolidays(d)) {
-  			// if day is already in "holiday", show error and return
-  			this.setNotification(true, `Dátum ${d.toLocaleDateString("sk-SK")} už je uložený!`, 'error');
-  			return;
-			} else {
-				// otherwise insert day to local holiday array
-				holidaysAdd.push({date: new Date(d), description: holidayNote});
-			}
-	  }
-	  
-	  // concat local holiday array to state holiday array
+  	if (this.areDatesInHolidays(dateFrom, dateTo)) {
+  		// if dates are already in "holidays", show error and return
+  		this.setNotification(true, `Zadané dátumy ${dateFrom.toLocaleDateString("sk-SK")} - ${dateTo.toLocaleDateString("sk-SK")} sa prekrývajú s už uloženou dovolenkou!`, 'error');
+  		return;
+  	} else {
+  		// otherwise insert day to local holiday array
+  		holidays.push({dateFrom, dateTo, description: holidayNote});
+  	}
+
+  	// save local holiday array to state holiday array
 	  // and show success notification
-	  this.setState({holidays: this.state.holidays.concat(holidaysAdd)});
-	  this.props.setUnsavedChanges(true);
+  	this.setState({holidays});
+  	this.props.setUnsavedChanges(true);
 	  this.setNotification(true, 'Dovolenka pridaná', 'success');
   }
 
-  // return true if date is saved in holidays
-  isDateInHolidays = (d) => {
+  // return true if date range is saved in holidays
+  areDatesInHolidays = (dateFrom, dateTo) => {
   	for (let i = 0, l = this.state.holidays.length; i < l; i++) {
-			if (this.state.holidays[i].date.getTime() === d.getTime()) {
-				return true;
+  		let holidayDateFrom = this.state.holidays[i].dateFrom.getTime();
+  		let holidayDateTo = this.state.holidays[i].dateTo.getTime();
+
+			if ((dateFrom.getTime() >= holidayDateFrom && dateFrom.getTime() <= holidayDateTo)
+					|| (dateTo.getTime() >= holidayDateFrom && dateTo.getTime() <= holidayDateTo)) {
+						return true;
 			}
 		}
+
 		return false;
 	}
 
-	// remove selected holiday
-  removeHoliday = (date) => {
+  // remove selected holiday
+  removeHoliday = (dateFrom) => {
   	let holidays = this.state.holidays.slice();
-  	let allow = window.confirm(`Prajete si vymazať dátum ${date.toLocaleDateString("sk-SK")} z voľných dní?`);
+  	let allow = window.confirm(`Prajete si vymazať dovolenku začínajúcu dátumom ${dateFrom.toLocaleDateString("sk-SK")}?`);
 
   	this.setNotification();
 
   	if (allow) {
   		for (let i = 0, l = holidays.length; i < l; i++) {
-  			if (holidays[i].date.getTime() === date.getTime()) {
+  			if (holidays[i].dateFrom.getTime() === dateFrom.getTime()) {
   				holidays.splice(i, 1);
   				this.setState({holidays});
   				this.setNotification(true, 'Vymazané', 'success');
@@ -133,8 +135,8 @@ class Administration extends React.Component {
   // return true if it's alright
   validateOpeningHours = (stableFrom, stableTo, lunchFrom, lunchTo) => {
   	if (stableFrom < stableTo && lunchFrom < lunchTo
-  		&& stableFrom < lunchFrom && lunchTo < stableTo) {
-  			return true;
+  			&& stableFrom < lunchFrom && lunchTo < stableTo) {
+  				return true;
   	}
   	return false;
   }
@@ -171,7 +173,7 @@ class Administration extends React.Component {
 
 		// sort holidays ascending by date
 		holidays.sort((a, b) => {
-			return a.date - b.date;
+			return a.dateFrom - b.dateFrom;
 		});
 
 		return (
@@ -289,16 +291,18 @@ class Administration extends React.Component {
 				{
 					holidays.map((holiday) => {
 						return (
-							<div key={holiday.date.toLocaleDateString("sk-SK")}>
+							<div key={holiday.dateFrom.toLocaleDateString("sk-SK")}>
 								<div className="w-40 dib">
 									<button
 										className="dark-red bg-white b ba b--dark-red hover-white bg-animate hover-bg-dark-red pointer"
 										title="Vymazať"
-										onClick={() => this.removeHoliday(holiday.date)}>
+										onClick={() => this.removeHoliday(holiday.dateFrom)}>
 										&times;
 									</button>
 									<p className="dib pl2">
-										{holiday.date.toLocaleDateString("sk-SK")}
+										{
+											holiday.dateFrom.toLocaleDateString("sk-SK") + (holiday.dateFrom.getTime() === holiday.dateTo.getTime() ? '' : ` - ${holiday.dateTo.toLocaleDateString("sk-SK")}`)
+										}
 									</p>
 								</div>
 								<p className="w-60 dib pl1">{holiday.description}</p>
